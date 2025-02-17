@@ -6,7 +6,6 @@ library(tidyverse)
 library(reshape2)
 library(knitr)
 
-
 #Titanic dataset from github
 # https://github.com/datasciencedojo/datasets/blob/master/titanic.csv
 df <- read.csv("https://raw.githubusercontent.com/datasciencedojo/datasets/refs/heads/master/titanic.csv")
