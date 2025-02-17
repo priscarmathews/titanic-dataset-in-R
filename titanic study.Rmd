@@ -1,0 +1,111 @@
+---
+title: "titanic"
+output: html_document
+date: "`r Sys.Date()`"
+---
+
+# setting up df
+```{r}
+library(janitor)
+library(tidyverse)
+library(reshape2)
+library(knitr)
+
+
+#Titanic dataset from github
+# https://github.com/datasciencedojo/datasets/blob/master/titanic.csv
+df <- read.csv("https://raw.githubusercontent.com/datasciencedojo/datasets/refs/heads/master/titanic.csv")
+
+df %>% head() %>% kable()
+
+view(df)
+
+```
+
+
+
+# 1
+```{r, echo = FALSE}
+#which gender had the highest deaths
+ggplot(data = df %>% mutate(Survived = ifelse(Survived == 1, "Survived", "Perished")) %>% 
+         group_by(Survived, Sex) %>%
+         tally(),
+       mapping = aes(x = Sex, 
+                     y = n, 
+                     group = Survived)) +
+  geom_col(aes(fill = Survived), 
+           position = "dodge") +
+  geom_text(aes(y = n/2 ,label = n),
+            position = position_dodge(width=1),size = 3) +
+  labs(x = "Passenger's Gender",
+       y = "Number of Passengers",
+       title = "Distribution of Passengers by Sex and Survival Status")
+```
+As shown in the graph, the majority of passengers that were males perished, whereas the majority of females survived.  When administering lifeboats, women and children were given first priority to enter, therefore women had a higher chance of survival than men.  Another factor that may have played into the deaths in males could be due to one's ego or feeling of responsibility to protect others before self.
+
+
+# 2
+```{r, echo=FALSE}
+# which class had the highest deaths
+ggplot(data = df %>% mutate(Survived = ifelse(Survived == 1, "Survived", "Perished")) %>% 
+         group_by(Survived, Pclass) %>%
+           tally(),
+       mapping = aes(x = Pclass, 
+                     y = n, 
+                     group = Survived)) +
+  geom_col(aes(fill = Survived), 
+           position = "dodge") +
+  geom_text(aes(y = n/2 ,label = n),
+            position = position_dodge(width=1),
+            size = 3) +
+  labs(x = "Passenger Class",
+       y = "Number of Passengers",
+       title = "Distribution of Passengers by Class and Survival Status")
+```
+The graph shows that 1st class members had the highest survival rate compared to 2nd and 3rd class.  The majority of 3rd class members perished in this tragedy.  This may have been due to preferential treatment given to higher class members.
+
+
+# 3
+```{r}
+# average fare for each class
+ggplot(data = df %>%
+         group_by(Pclass) %>%
+         summarise(Average = mean(Fare)),
+       mapping = aes(x = factor(Pclass), 
+                     y = Average)) +
+  geom_col(aes(fill = factor(Pclass)), 
+           position = "dodge") +
+  geom_text(aes(label = round(Average, 2), 
+                y = Average / 2),
+            size = 3) +
+  labs(x = "Passenger Class",
+       y = "Average Fare",
+       title = "Average Fare Per Passenger Class") +
+        scale_fill_discrete(labels = c("1" = "1st Class", "2" = "2nd Class", "3" = "3rd Class"))
+```
+The 1st class fares were much more costly than 2nd and 3rd class fares.  The average price of the 1st class tickets being about 4x more than the average 2nd class ticket may infer that 1st class members had been given preferential treatment, which ties in to high 1st class member survival rates.
+
+
+# 4
+
+```{r}
+
+
+# distribution of passengers by age group and survival status
+ggplot(data = df %>% mutate(Survived = ifelse(Survived == 1, "Survived", "Perished"),
+                            Age_Group = cut(Age, breaks = seq(from = 0, to = 100, by = 5))) %>% 
+         group_by(Survived, Age_Group) %>%
+           tally() %>% na.omit(),
+       mapping = aes(x = Age_Group, 
+                     y = n, 
+                     group = Survived)) +
+  geom_col(aes(fill = Survived), 
+           position = "dodge") +
+  geom_text(aes(y = n/2 ,label = n),
+            position = position_dodge(width=1),
+            size = 4) +
+  labs(x = "Age Group",
+       y = "Number of Passengers",
+       title = "Distribution of Passengers by Age Group and Survival Status")
+```
+Many young children 0-5 years of age were able to escape, however older children were less fortunate.  People ages 15-30 had much higher mortality rates compared to survival.  Passengers ages 65-75 had all perished - maybe they let it happen since they were at the end of their lives anyway (?).... There was one person whose age was anywhere from 75-80 that somehow managed to escape (at their old age but good for them).  It's important to note that around a quarter of the people in the provided dataset had no age accounted for.  The majority of those passengers were in 3rd class.  If provided with the proper ages of all passengers aboard the Titanic, the graph would've have been more accurate.
