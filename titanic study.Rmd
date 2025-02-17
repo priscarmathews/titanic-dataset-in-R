@@ -21,7 +21,7 @@ df %>% head() %>% kable()
 view(df)
 
 ```
-All of the libraries used help with the aesthetics of the making of each graph.  The head() function gives the first 5 rows, and the kable() function helps to make the tables more concise and pretty.  The main classes used are Survived (0 = Perished, 1 = Survived), Pclass (1st, 2nd, or 3rd),Sex, Age, and Fare.
+All of the libraries used help with the aesthetics of the making of each table/graph.  The head() function gives the first 5 rows, and the kable() function helps to make the tables more concise and pretty.  The main classes used are Survived (0 = Perished, 1 = Survived), Pclass (1st, 2nd, or 3rd),Sex, Age, and Fare.
 
 
 # 1
