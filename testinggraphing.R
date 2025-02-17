@@ -4,7 +4,7 @@ library(tidyverse)
 df <- read.csv("https://raw.githubusercontent.com/datasciencedojo/datasets/refs/heads/master/titanic.csv")
 
 view(df)
-# testing out various plotting !!
+# testing out various plotting !! TESTING!! 
 
 
 # scatterplot
